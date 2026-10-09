@@ -1,0 +1,11 @@
+# pliki gry i wyniki budowania - nie wrzucac do repo
+HiredGuns/
+HiredGunsPL/
+*.hdf
+*.adf
+*.zip
+# skompilowane narzedzie RNC
+tools/rnc_propack/rnc
+tools/rnc_propack/rnc.exe
+__pycache__/
+*.000000.bin
