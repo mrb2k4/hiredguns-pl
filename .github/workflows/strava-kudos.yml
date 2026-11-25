@@ -1,0 +1,56 @@
+name: Strava kudosy
+
+on:
+  schedule:
+    # cron jest w UTC; para wpisow na kazda pore = dziala w czasie zimowym i letnim,
+    # a krok "Sprawdz godzine" przepuszcza tylko ten, ktory wypada o 23:xx / 07:xx w Polsce
+    - cron: "10 21 * * *"  # 23:10 CEST (lato)
+    - cron: "10 22 * * *"  # 23:10 CET  (zima)
+    - cron: "5 5 * * *"    # 07:05 CEST
+    - cron: "5 6 * * *"    # 07:05 CET
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Tylko policz, nie klikaj"
+        type: boolean
+        default: false
+
+concurrency: strava-kudos
+
+jobs:
+  kudos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Sprawdz godzine w Polsce
+        id: check
+        run: |
+          h=$(TZ=Europe/Warsaw date +%H)
+          echo "Godzina w Warszawie: $h"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$h" = "23" ] || [ "$h" = "07" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.run == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.check.outputs.run == 'true'
+        with:
+          python-version: "3.12"
+      - name: Daj kudosy
+        if: steps.check.outputs.run == 'true'
+        working-directory: strava-kudos
+        env:
+          STRAVA_COOKIE: ${{ secrets.STRAVA_COOKIE }}
+          STRAVA_EMAIL: ${{ secrets.STRAVA_EMAIL }}
+          STRAVA_PASSWORD: ${{ secrets.STRAVA_PASSWORD }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+          python kudos.py
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: error-screenshot
+          path: strava-kudos/error.png
+          if-no-files-found: ignore
