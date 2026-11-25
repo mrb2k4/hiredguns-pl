@@ -41,4 +41,6 @@ Na NAS-ie (x86_64 lub ARM64, min. 1 GB RAM, Docker / Container Manager):
 3. Test: `docker compose run --rm -e DRY_RUN=1 strava-kudos python kudos.py`
 4. Start: `docker compose up -d` – logi: `docker logs -f strava-kudos`.
 
-Godziny zmienisz w `RUN_AT` w `docker-compose.yml`.
+Kontener uruchamia bota raz w każdym oknie (domyślnie 07:00–09:00 i 23:00–01:00)
+o losowej porze; między kudosami losowe przerwy 3–12 s, czasem 15–45 s.
+Okna zmienisz w `WINDOWS` w `docker-compose.yml`.

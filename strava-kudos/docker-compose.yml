@@ -11,5 +11,5 @@ services:
     env_file: .env
     environment:
       TZ: Europe/Warsaw
-      RUN_AT: "23:10 07:05"
-    command: bash scheduler.sh
+      WINDOWS: "07:00-09:00 23:00-01:00"
+    command: sh -c "python -c 'import playwright' 2>/dev/null || pip install -q -r requirements.txt; exec python -u scheduler.py"

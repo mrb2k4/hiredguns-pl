@@ -21,8 +21,12 @@ DRY_RUN = os.getenv("DRY_RUN", "0") == "1"
 UNFILLED = "button[data-testid='kudos_button']:has([data-testid='unfilled_kudos']):not([disabled])"
 
 
-def pause(a=0.8, b=2.0):
-    time.sleep(random.uniform(a, b))
+def pause():
+    """Losowa przerwa miedzy kudosami: zwykle 3-12 s, czasem dluzsza (15-45 s)."""
+    if random.random() < 0.15:
+        time.sleep(random.uniform(15, 45))
+    else:
+        time.sleep(random.uniform(3, 12))
 
 
 def login(page, context):
