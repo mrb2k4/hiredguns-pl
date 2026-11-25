@@ -31,3 +31,14 @@ ile kudosów by dał. Przy błędzie w artefaktach jest `error-screenshot`.
 - Strava nie ma oficjalnego API do kudosów, więc to klikanie w przeglądarce; automatyzacja
   jest niezgodna z regulaminem Stravy – limit `MAX_KUDOS` (100) i losowe przerwy
   zmniejszają ryzyko, ale go nie eliminują.
+
+## NAS / Docker
+
+Na NAS-ie (x86_64 lub ARM64, min. 1 GB RAM, Docker / Container Manager):
+
+1. Skopiuj katalog `strava-kudos` na NAS (np. `/volume1/docker/strava-kudos`).
+2. `cp .env.example .env` i wpisz w nim `STRAVA_COOKIE`.
+3. Test: `docker compose run --rm -e DRY_RUN=1 strava-kudos python kudos.py`
+4. Start: `docker compose up -d` – logi: `docker logs -f strava-kudos`.
+
+Godziny zmienisz w `RUN_AT` w `docker-compose.yml`.

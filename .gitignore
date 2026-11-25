@@ -9,3 +9,7 @@ tools/rnc_propack/rnc
 tools/rnc_propack/rnc.exe
 __pycache__/
 *.000000.bin
+
+# sekrety i wyniki bota Strava
+strava-kudos/.env
+strava-kudos/error.png
